@@ -1,5 +1,9 @@
 #!/bin/bash --login
+git_root=$(git rev-parse --show-toplevel)
+grpc_libs_path=$git_root/meta/tmp/grpc/libs/opt
+protobuf_libs_path=/meta/tmp/grpc/third_party/protobuf/src/.libs
 
+export LD_LIBRARY_PATH=$grpc_libs_path:$protobuf_libs_path:$LD_LIBRARY_PATH
 
 export GLOG_logtostderr=${GLOG_logtostderr:='1'}
 export GLOG_v=${GLOG_v:='1'}
