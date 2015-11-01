@@ -10,4 +10,7 @@
     recursive=yes
 
 - name: Compile
-  shell: make -j{{ansible_processor_vcpus}} chdir='{{goobly_cache_dir}}/grpc'
+  command: make -j{{ansible_processor_vcpus}}
+  args:
+    chdir: '{{goobly_cache_dir}}/grpc'
+    creates: '{{goobly_cache_dir}}/grpc/bins/opt/protobuf/protoc'
