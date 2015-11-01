@@ -8,6 +8,7 @@
     dest='{{goobly_cache_dir}}/grpc'
     update=yes
     recursive=yes
+    version='release-0_11'
 
 - name: Compile
   command: make -j{{ansible_processor_vcpus}}

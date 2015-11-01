@@ -8,8 +8,11 @@ enable_testing ()
 # libgflags-dev libgtest-dev
 find_package (GTest REQUIRED)
 
+set (PROTOBUF_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/libs/opt)
+set (PROTOBUF_3RD_PARTY_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party)
+
+
 link_directories (
-  ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/libs/opt
   /usr/local/lib # must be last if locals aren't used
   )
 include_directories (
@@ -27,9 +30,12 @@ include_directories (
 set (PROTO_SOURCES
   ${PROJECT_SOURCE_DIR}/proto/goobly.pb.cc
   )
-
+set (PROTO_GRPC_SOURCES
+  ${PROJECT_SOURCE_DIR}/proto/goobly.grpc.pb.cc
+  )
 set (LIB_GOOBLY_SOURCES
   ${PROTO_SOURCES}
+  ${PROTO_GRPC_SOURCES}
   )
 
 function (join VALUES SEP OUTPUT)
@@ -50,6 +56,7 @@ set(BASE_FLAGS
   "-Wparentheses"
   "-Wpointer-arith"
   "-Wformat-security"
+  # "-Wnon-virtual-dtor"
   "-Wunused"
   "-Wno-unused-parameter"
   "-Wcast-align"
@@ -61,7 +68,6 @@ set (CXX_FLAG_LIST
   ${BASE_FLAGS}
   "-std=c++1y"
   "-ftemplate-depth-256"
-  "-Wnon-virtual-dtor"
   "-Woverloaded-virtual"
   "-Wsign-promo"
   "-Wreorder"
@@ -72,6 +78,7 @@ join ("${BASE_FLAGS}" " " CMAKE_C_FLAGS)
 set (CMAKE_CXX_COMPILER clang++-3.6)
 set (CMAKE_C_COMPILER clang-3.6)
 set (PROTOC ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/bins/opt/protobuf/protoc)
+set (PROTOC_GRPC_PLUGINS_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/bins/opt)
 
 add_custom_command (
   OUTPUT ${PROTO_SOURCES}
@@ -79,16 +86,28 @@ add_custom_command (
   COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --cpp_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/goobly.proto
   )
 
-set (PROTOBUF_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/libs/opt)
-set (PROTOBUF_3RD_PARTY_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party)
-set (GOOBLY_LIB_LIBRARIES
-  :libjemalloc.so.1 # TODO(agallego) - add it to the apt.yml repo
+add_custom_command (
+  OUTPUT ${PROTO_GRPC_SOURCES}
+  DEPENDS ${PROJECT_SOURCE_DIR}/proto/goobly.proto
+  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --plugin=protoc-gen-grpc=${PROTOC_GRPC_PLUGINS_PATH}/grpc_cpp_plugin --grpc_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/goobly.proto
+  )
+
+
+set (GOOBLY_STATIC_LIB_DEPS
   :${PROTOBUF_LIB_PATH}/libgpr.a
-  :${PROTOBUF_LIB_PATH}/libgrpc++.a
+  :${PROTOBUF_LIB_PATH}/libgrpc++_unsecure.a
   :${PROTOBUF_3RD_PARTY_LIB_PATH}/protobuf/src/.libs/libprotobuf.a
+  )
+
+set (GOOBLY_DYN_LIBS_DEPS
+  :libjemalloc.so.1 # TODO(agallego) - add it to the apt.yml repo
   pthread
   rt
   dl
+  )
+set (GOOBLY_LIB_LIBRARIES
+  ${GOOBLY_STATIC_LIB_DEPS}
+  ${GOOBLY_DYN_LIBS_DEPS}
   )
 add_library (goobly SHARED
   ${LIB_GOOBLY_SOURCES}
