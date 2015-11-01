@@ -94,18 +94,18 @@ add_custom_command (
 
 
 set (GOOBLY_STATIC_LIB_DEPS
-  :${PROTOBUF_LIB_PATH}/libgpr.a
-  :${PROTOBUF_LIB_PATH}/libgrpc++_unsecure.a
   :${PROTOBUF_3RD_PARTY_LIB_PATH}/protobuf/src/.libs/libprotobuf.a
   )
 
 set (GOOBLY_DYN_LIBS_DEPS
   :libjemalloc.so.1 # TODO(agallego) - add it to the apt.yml repo
+  :${PROTOBUF_LIB_PATH}/libgpr.so.0.11.0.0
+  :${PROTOBUF_LIB_PATH}/libgrpc++_unsecure.so.0.11.0.0
   pthread
   rt
   dl
   )
-set (GOOBLY_LIB_LIBRARIES
+set (GOOBLY_LIBRARIES
   ${GOOBLY_STATIC_LIB_DEPS}
   ${GOOBLY_DYN_LIBS_DEPS}
   )
