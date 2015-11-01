@@ -1,8 +1,9 @@
 set (GOOBLY_TEST_LIBRARIES
-  goobly
   ${GTEST_BOTH_LIBRARIES}
+  :libgpr.so.0.11.0.0
+  :libgrpc++_unsecure.so.0.11.0.0
+  goobly
   ${GOOBLY_LIBRARIES}
-
   )
 
 set (GOOBLY_TESTS "")
