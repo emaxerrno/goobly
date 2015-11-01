@@ -1,5 +1,8 @@
 set (GOOBLY_TEST_LIBRARIES
   ${GTEST_BOTH_LIBRARIES}
+  :${PROTOBUF_LIB_PATH}/libgpr.so.0.11.0.0
+  :${PROTOBUF_LIB_PATH}/libgrpc++_unsecure.so.0.11.0.0
+  goobly
   ${GOOBLY_LIBRARIES}
   )
 
@@ -11,7 +14,7 @@ function (register_test NAME DIR SOURCE)
     ${DIR}/${SOURCE}
     )
   add_executable (${NAME} ${TEST_EXECUTABLE_SOURCES})
-  target_link_libraries (${NAME} goobly ${GOOBLY_TEST_LIBRARIES})
+  target_link_libraries (${NAME} ${GOOBLY_TEST_LIBRARIES})
   add_test (
     NAME ${NAME}_runner
     COMMAND ${PROJECT_SOURCE_DIR}/test/run_test.sh $<TARGET_FILE:${NAME}> ${DIR}
