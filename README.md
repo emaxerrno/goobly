@@ -1,8 +1,11 @@
 # goobly
-goobly
+goobly - project to port over a  raft impl w/ gRPC in modern C++ - Still work in progress.
 
 # how to contribute?
-* use clang-format on all your cpp code.
+* use clang-format on all your cpp code. This is what I use in emacs:
+```
+(global-set-key (kbd "<C-M-tab>") 'clang-format-buffer)
+```
 * submit PR's for any change / brainstorm ideas
 * file issues
 
@@ -23,3 +26,5 @@ $ cd meta && source source_ansible_bash && ansible-playbook playbook/dev_all.yml
 #
 $ mkdir build && cd build && cmake .. && make && ctest -V
 ```
+
+/cc [@gallegoxx](https://twitter.com/gallegoxx)
