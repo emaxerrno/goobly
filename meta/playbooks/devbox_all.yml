@@ -1,0 +1,7 @@
+---
+
+
+- name: Install & build all development dependencies
+  hosts: localhost
+  roles:
+    - grpc

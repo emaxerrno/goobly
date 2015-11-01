@@ -1,0 +1,13 @@
+---
+
+- name: Sync soure from git
+  git:
+    repo='https://github.com/grpc/grpc.git'
+    accept_hostkey=yes
+    clone=yes
+    dest='{{goobly_cache_dir}}/grpc'
+    update=yes
+    recursive=yes
+
+- name: Compile
+  shell: make -j{{ansible_processor_vcpus}} chdir='{{goobly_cache_dir}}/grpc'

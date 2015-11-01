@@ -8,7 +8,6 @@ else
          python-dev \
          python-pip
 
-    sudo pip install gsutil
     sudo pip install virtualenv
     echo "Creating work directory ${PWD}/tmp"
     mkdir -p ${DIR}/tmp
@@ -17,6 +16,5 @@ else
     pip install paramiko PyYAML Jinja2 httplib2
     pip install ansible
     echo "Successfully installed ansible!"
-    echo "Be sure to play the devbox_cpp_libs.yml role"
-    echo "i.e: ansible-playbook -i hosts -K playbooks/devbox_all.yml"
+    echo "Next: ansible-playbook playbooks/devbox_all.yml"
 fi
