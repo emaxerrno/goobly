@@ -11,13 +11,13 @@ find_package (GTest REQUIRED)
 set (PROTOBUF_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/libs/opt)
 set (PROTOBUF_3RD_PARTY_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party)
 
-
 link_directories (
   ${PROTOBUF_LIB_PATH}
   ${PROTOBUF_LIB_PATH}/protobuf
   ${PROTOBUF_LIB_PATH}/openssl
   /usr/local/lib # must be last if locals aren't used
   )
+
 include_directories (
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/include
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party/protobuf/src

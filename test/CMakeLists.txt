@@ -1,7 +1,17 @@
+set (GBENCH_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/google_benchmark)
+
+link_directories (
+  ${GBENCH_LIB_PATH}/src
+  )
+include_directories (
+  ${GBENCH_LIB_PATH/include}
+  )
+
 set (GOOBLY_TEST_LIBRARIES
   ${GTEST_BOTH_LIBRARIES}
   goobly
   ${GOOBLY_LIBRARIES}
+  :libbenchmark.a
   )
 
 set (GOOBLY_TESTS "")
