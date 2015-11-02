@@ -209,12 +209,15 @@ class GreeterClient {
   std::unique_ptr<Greeter::Stub> stub_;
 };
 
-int main(int argc, char **argv) {
-  std::thread([] {
-    ServerImpl server;
-    server.Run();
-  }).detach();
 
+#include <benchmark/benchmark.h>
+#include <glog/logging.h>
+
+static void BM_async_client_requests(benchmark::State& state) {
+  std::thread([] {
+      ServerImpl server;
+      server.Run();
+    }).detach();
   // Instantiate the client. It requires a channel, out of which the actual RPCs
   // are created. This channel models a connection to an endpoint (in this case,
   // localhost at port 50051). We indicate that the channel isn't authenticated
@@ -222,8 +225,20 @@ int main(int argc, char **argv) {
   GreeterClient greeter(
     grpc::CreateChannel("localhost:50051", grpc::InsecureCredentials()));
   std::string user("world");
-  std::string reply = greeter.SayHello(user); // The actual RPC call!
-  std::cout << "Greeter received: " << reply << std::endl;
 
-  return 0;
+  while (state.KeepRunning()) {
+    // discard the result
+    greeter.SayHello(user); // The actual RPC call!
+  }
+
+}
+// Register the function as a benchmark
+BENCHMARK(BM_async_client_requests);
+
+
+int main(int argc, char **argv) {
+  google::InstallFailureSignalHandler();
+  google::InitGoogleLogging(argv[0]);
+  benchmark::Initialize(&argc, (const char **)argv);
+  benchmark::RunSpecifiedBenchmarks();
 }

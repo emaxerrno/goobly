@@ -107,6 +107,7 @@ set (GOOBLY_STATIC_LIB_DEPS
 
 set (GOOBLY_DYN_LIBS_DEPS
   :libjemalloc.so.1 # TODO(agallego) - add it to the apt.yml repo
+  :libglog.so.0.0.0
   z
   pthread
   rt

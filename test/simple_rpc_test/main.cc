@@ -26,7 +26,7 @@ class GreeterServiceImpl final : public Greeter::Service {
 };
 
 void RunServer() {
-  std::string server_address("0.0.0.0:50051");
+  std::string server_address("0.0.0.0:50052");
   GreeterServiceImpl service;
 
   ServerBuilder builder;
@@ -48,13 +48,13 @@ using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
 class GreeterClient {
- public:
+  public:
   GreeterClient(std::shared_ptr<Channel> channel)
-      : stub_(Greeter::NewStub(channel)) {}
+    : stub_(Greeter::NewStub(channel)) {}
 
   // Assambles the client's payload, sends it and presents the response back
   // from the server.
-  std::string SayHello(const std::string& user) {
+  std::string SayHello(const std::string &user) {
     // Data we are sending to the server.
     HelloRequest request;
     request.set_name(user);
@@ -70,29 +70,42 @@ class GreeterClient {
     Status status = stub_->SayHello(&context, request, &reply);
 
     // Act upon its status.
-    if (status.ok()) {
+    if(status.ok()) {
       return reply.message();
     } else {
       return "RPC failed";
     }
   }
 
- private:
+  private:
   std::unique_ptr<Greeter::Stub> stub_;
 };
 
 
+#include <benchmark/benchmark.h>
+#include <glog/logging.h>
 
-int main(int argc, char **argv) {
+static void BM_sync_client_requests(benchmark::State &state) {
   std::thread([] { RunServer(); }).detach();
   // Instantiate the client. It requires a channel, out of which the actual RPCs
   // are created. This channel models a connection to an endpoint (in this case,
-  // localhost at port 50051). We indicate that the channel isn't authenticated
+  // localhost at port 50052). We indicate that the channel isn't authenticated
   // (use of InsecureCredentials()).
   GreeterClient greeter(
-      grpc::CreateChannel("localhost:50051", grpc::InsecureCredentials()));
+    grpc::CreateChannel("localhost:50052", grpc::InsecureCredentials()));
   std::string user("world");
-  std::string reply = greeter.SayHello(user);
-  std::cout << "Greeter received: " << reply << std::endl;
+  while(state.KeepRunning()) {
+    // discard the reply
+    greeter.SayHello(user);
+  }
+}
+// Register the function as a benchmark
+BENCHMARK(BM_sync_client_requests);
+
+int main(int argc, char **argv) {
+  google::InstallFailureSignalHandler();
+  google::InitGoogleLogging(argv[0]);
+  benchmark::Initialize(&argc, (const char **)argv);
+  benchmark::RunSpecifiedBenchmarks();
   return 0;
 }
