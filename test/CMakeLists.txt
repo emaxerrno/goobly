@@ -1,7 +1,5 @@
 set (GOOBLY_TEST_LIBRARIES
   ${GTEST_BOTH_LIBRARIES}
-  :libgpr.so.0.11.0.0
-  :libgrpc++_unsecure.so.0.11.0.0
   goobly
   ${GOOBLY_LIBRARIES}
   )
@@ -25,6 +23,10 @@ set (TEST_ROOT ${PROJECT_SOURCE_DIR}/test)
 
 register_test (simple_rpc_test
   ${TEST_ROOT}/simple_rpc_test
+  main.cc)
+
+register_test (async_rpc_test
+  ${TEST_ROOT}/async_rpc_test
   main.cc)
 
 add_custom_target (check

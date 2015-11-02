@@ -13,8 +13,9 @@ set (PROTOBUF_3RD_PARTY_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party
 
 
 link_directories (
-  ${PROTOBUF_3RD_PARTY_LIB_PATH}/protobuf/src/.libs
   ${PROTOBUF_LIB_PATH}
+  ${PROTOBUF_LIB_PATH}/protobuf
+  ${PROTOBUF_LIB_PATH}/openssl
   /usr/local/lib # must be last if locals aren't used
   )
 include_directories (
@@ -96,23 +97,27 @@ add_custom_command (
 
 
 set (GOOBLY_STATIC_LIB_DEPS
+  :libgrpc++_unsecure.a
+  :libgrpc.a
+  :libgpr.a
   :libprotobuf.a
+  :libssl.a
+  :libcrypto.a
   )
 
 set (GOOBLY_DYN_LIBS_DEPS
   :libjemalloc.so.1 # TODO(agallego) - add it to the apt.yml repo
-  :libgpr.so.0.11.0.0
-  :libgrpc++_unsecure.so.0.11.0.0
+  z
   pthread
   rt
   dl
   )
 set (GOOBLY_LIBRARIES
-  ${GOOBLY_STATIC_LIB_DEPS}
   ${GOOBLY_DYN_LIBS_DEPS}
   )
 add_library (goobly SHARED
   ${LIB_GOOBLY_SOURCES}
   )
+target_link_libraries(goobly ${GOOBLY_STATIC_LIB_DEPS})
 
 add_subdirectory (test)
