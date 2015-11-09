@@ -9,6 +9,7 @@
     update=yes
     recursive=yes
     version='release-0_11'
+    force=yes
 
 - name: Compile
   command: make -j{{ansible_processor_vcpus}}

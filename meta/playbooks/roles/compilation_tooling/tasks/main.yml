@@ -7,6 +7,9 @@
     - 'ppa:ubuntu-toolchain-r/test'
     - 'ppa:ubuntu-elisp/ppa'
 
+
+# TODO(agallego)
+# Note this is pending glog download, configure and link, needs sandbox
 - name: Install all dev system tools
   sudo: yes
   apt:

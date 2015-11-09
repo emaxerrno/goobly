@@ -20,3 +20,4 @@
   command: make -j{{ansible_processor_vcpus}}
   args:
     chdir: '{{goobly_cache_dir}}/google_benchmark'
+    creates: '{{goobly_cache_dir}}/google_benchmark/src/libbenchmark.a'

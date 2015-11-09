@@ -4,5 +4,6 @@
 - name: Install & build all development dependencies
   hosts: localhost
   roles:
+    - compilation_tooling
     - grpc
     - google_benchmark
