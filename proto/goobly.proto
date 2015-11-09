@@ -1,8 +1,12 @@
 syntax = "proto3";
 option java_package = "goobly.grpc";
 option objc_class_prefix = "GBLY";
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
 
 package goobly;
+
+
 // The greeting service definition.
 service MultiGreeter {
   // Sends multiple greetings
