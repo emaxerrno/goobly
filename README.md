@@ -9,13 +9,13 @@ goobly - project to port over a  raft impl w/ gRPC in modern C++ - Still work in
 * submit PR's for any change / brainstorm ideas
 * file issues
 
-# how to get up and running quickly? 
+# how to get up and running quickly?
 * build the transitive dependencies:
 
 ```
 # assuming bash
 # tested on ubuntu 14.04 x86_64 only
-$ cd meta && source source_ansible_bash && ansible-playbook playbook/dev_all.yml
+$ cd meta && source source_ansible_bash && ansible-playbook -K playbook/dev_all.yml
 ```
 
 * That's it, just build & run the unit tests:
