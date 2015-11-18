@@ -28,3 +28,73 @@ message HelloRequest {
 message HelloReply {
   string message = 1;
 }
+
+
+// Raft
+
+// kudu: https://github.com/cloudera/kudu/blob/6e6be4af952fcfb75269ad362eba317965e90455/src/kudu/consensus/consensus.proto
+
+
+// probably wrong abstraction here
+message RequestForVoteReply {
+ uint64 term;
+ bool vote_granted;
+}
+
+message RequestForVoteArgs {
+  uint64 term;
+  uint64 candidate_id;
+  uint64 last_log_index;
+  uint64 last_log_term;
+
+  // optional uint64 originating_server_id;
+}
+
+message Entry {
+  uint64 time;
+  binary key;
+  binary value;
+}
+
+message AppendEntriesArgs {
+  uint64 term;
+  uint64 leader_id;
+  uint64 prev_log_index_id;
+  uint64 prev_log_term;
+  uint64 leader_commit_id;
+  repeated Entry entries;
+}
+message AppendEntriesReply {
+  uint64 term;
+  bool success;
+}
+
+service Raft {
+  rpc RequestForVote(rfv: RequestForVoteArgs) returns (RequestForVoteReply) {
+    // Invoked by candidates to gather votes (§5.2).
+    // Arguments:
+    // term candidate’s term
+    // candidateId candidate requesting vote
+    // lastLogIndex index of candidate’s last log entry (§5.4)
+    // lastLogTerm term of candidate’s last log entry (§5.4)
+    // Results:
+    // term currentTerm, for candidate to update itself
+    // voteGranted true means candidate received vote
+    // Receiver implementation:
+    // 1. Reply false if term < currentTerm (§5.1)
+    // 2. If votedFor is null or candidateId, and candidate’s log is at
+    // least as up-to-date as receiver’s log, grant vote (§5.2, §5.4)
+  }
+  rpc AppendEntries(ae: AppendEntriesArgs) returns (AppendEntriesReply) {
+    // Receiver implementation:
+    // 1. Reply false if term < currentTerm (§5.1)
+    // 2. Reply false if log doesn’t contain an entry at prevLogIndex
+    //   whose term matches prevLogTerm (§5.3)
+    // 3. If an existing entry conflicts with a new one (same index
+    //   but different terms), delete the existing entry and all that
+    //   follow it (§5.3)
+    // 4. Append any new entries not already in the log
+    // 5. If leaderCommit > commitIndex, set commitIndex =
+    //   min(leaderCommit, index of last new entry)
+  }
+}
