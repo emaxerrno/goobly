@@ -37,40 +37,40 @@ message HelloReply {
 
 // probably wrong abstraction here
 message RequestForVoteReply {
- uint64 term;
- bool vote_granted;
+ uint64 term = 1;
+ bool vote_granted = 2;
 }
 
 message RequestForVoteArgs {
-  uint64 term;
-  uint64 candidate_id;
-  uint64 last_log_index;
-  uint64 last_log_term;
+  uint64 term = 1;
+  uint64 candidate_id = 2;
+  uint64 last_log_index = 3;
+  uint64 last_log_term = 4;
 
   // optional uint64 originating_server_id;
 }
 
 message Entry {
-  uint64 time;
-  binary key;
-  binary value;
+  uint64 wall_time = 1;
+  bytes key = 2;
+  bytes value = 3;
 }
 
 message AppendEntriesArgs {
-  uint64 term;
-  uint64 leader_id;
-  uint64 prev_log_index_id;
-  uint64 prev_log_term;
-  uint64 leader_commit_id;
-  repeated Entry entries;
+  uint64 term = 1;
+  uint64 leader_id = 2;
+  uint64 prev_log_index_id = 3;
+  uint64 prev_log_term = 4;
+  uint64 leader_commit_id = 5;
+  repeated Entry entries = 6;
 }
 message AppendEntriesReply {
-  uint64 term;
-  bool success;
+  uint64 term = 1;
+  bool success = 2;
 }
 
 service Raft {
-  rpc RequestForVote(rfv: RequestForVoteArgs) returns (RequestForVoteReply) {
+  rpc RequestForVote(RequestForVoteArgs) returns (RequestForVoteReply) {
     // Invoked by candidates to gather votes (§5.2).
     // Arguments:
     // term candidate’s term
@@ -85,7 +85,7 @@ service Raft {
     // 2. If votedFor is null or candidateId, and candidate’s log is at
     // least as up-to-date as receiver’s log, grant vote (§5.2, §5.4)
   }
-  rpc AppendEntries(ae: AppendEntriesArgs) returns (AppendEntriesReply) {
+  rpc AppendEntries(AppendEntriesArgs) returns (AppendEntriesReply) {
     // Receiver implementation:
     // 1. Reply false if term < currentTerm (§5.1)
     // 2. Reply false if log doesn’t contain an entry at prevLogIndex
