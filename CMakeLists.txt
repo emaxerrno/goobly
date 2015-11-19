@@ -36,6 +36,7 @@ set (PROTO_SOURCES
 set (PROTO_GRPC_SOURCES
   ${PROJECT_SOURCE_DIR}/proto/goobly.grpc.pb.cc
   )
+
 set (LIB_GOOBLY_SOURCES
   ${PROTO_SOURCES}
   ${PROTO_GRPC_SOURCES}
@@ -59,7 +60,6 @@ set(BASE_FLAGS
   "-Wparentheses"
   "-Wpointer-arith"
   "-Wformat-security"
-  # "-Wnon-virtual-dtor"
   "-Wunused"
   "-Wno-unused-parameter"
   "-Wcast-align"
@@ -121,5 +121,11 @@ add_library (goobly SHARED
   ${LIB_GOOBLY_SOURCES}
   )
 target_link_libraries(goobly ${GOOBLY_STATIC_LIB_DEPS})
+
+add_executable (goobly_db
+  ${PROJECT_SOURCE_DIR}/src/goobly_db/main.cc
+  )
+target_link_libraries (goobly_db ${GOOBLY_DYN_LIBS_DEPS} goobly)
+
 
 add_subdirectory (test)
