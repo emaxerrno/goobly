@@ -21,7 +21,6 @@ link_directories (
 include_directories (
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/include
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party/protobuf/src
-  ${PROJECT_SOURCE_DIR}/meta/tmp/google_benchmark/include
   ${PROJECT_SOURCE_DIR}/lib
   ${PROJECT_SOURCE_DIR}/proto
   )
@@ -66,6 +65,7 @@ set(BASE_FLAGS
   "-Wcast-align"
   "-Wmissing-field-initializers"
   "-o2"
+  "-ggdb"
   )
 
 set (CXX_FLAG_LIST
