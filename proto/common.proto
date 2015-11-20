@@ -1,0 +1,26 @@
+syntax = "proto3";
+option java_package = "goobly.grpc";
+option objc_class_prefix = "GBLY";
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+package goobly;
+
+
+// it's important to keep this to bytes only and to 2 fields
+// ALL key value replicated datastores work with envelopes of bytes
+// adding fields like `uint64 wall_time=1` may seem perfectly reasonable
+// at first, but it promotes byte copying as you then have to serialize the
+// bytes to a bigger byte array and save it. On deserialization you do the same
+// so from disk to client you usually incur about 4 serializations
+// [send_client] + [recv_server] + [recv_database_format] + [copy_to_disk]
+//
+// This saves about 2 {ser,deser}ializations with rocksdb, for example.
+// This may be a limitation, and we'll consider changes w/ proper benchmarks
+// and unit tests
+//
+// Do not edit
+//
+message Entry {
+  bytes key = 1;
+  bytes value = 2;
+}
