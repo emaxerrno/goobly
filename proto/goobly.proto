@@ -32,8 +32,10 @@ message DeleteRequest {
   repeated bytes keys = 1;
 }
 
-
-
+// Because GRPC uses 'HTTP2' status code with
+// every reply, there is no need to encode
+// a 'message Status' in every reply. This is implicit and convenient
+//
 service State {
   rpc scan(ScanRequest) returns (ScanReply);
   rpc put(PutRequest);
