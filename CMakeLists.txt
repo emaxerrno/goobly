@@ -21,7 +21,7 @@ link_directories (
 include_directories (
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/include
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party/protobuf/src
-  ${PROJECT_SOURCE_DIR}/lib
+  ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_SOURCE_DIR}/proto
   )
 
