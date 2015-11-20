@@ -29,7 +29,7 @@ message PutRequest {
 }
 
 message DeleteRequest {
-  repeated keys = 1;
+  repeated bytes keys = 1;
 }
 
 
