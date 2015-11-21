@@ -44,15 +44,12 @@ Stateful:
 
 ```
 
-## Yay, introducing googly's intended case:
+## Googly's Intended Case
 
-Sorry for the verbose intro, but typing this into english took longer
-and was more confusing (#ESLStudent). Feedback is welcomed!
-
-Stateless aggregations are easy to scale. You literally just spin up
-more boxes and as long as your routing layer can handle redistribution of work
-via consistent hashing (e.g.: 256 vnodes like cassandra or 3 buckets like riak),
-stateless computations are the dream for framework authors.
+Stateless aggregations are easy to scale. As long as your routing layer can handle redistribution of work
+via consistent hashing (e.g.: 256 vnodes like cassandra or 3 buckets like riak), you can keep adding
+machines to increase the aggregation throughput. It is thus very desirable to be able to use only stateless
+computations.
 
 The pseudo code is relatively simple:
 
