@@ -115,7 +115,7 @@ on event time or system time.
 ## 1. Global availability of a datastore
 
 I'm a _YUGE_ fan of [Google MillWheel](http://research.google.com/pubs/pub41378.html).
-Tyler and team inspired me to start [concord](concord.io).
+Tyler and team inspired me to start [concord](http://concord.io).
 
 They key insight here is that they didn't have to worry about replicating state
 per message/tuple as they already had an internal system to handle this. When a
@@ -131,7 +131,7 @@ very good at it like Kafka/Spanner/BigTable.
 
 In fact if you look at [Cask](http://blog.cask.co/tag/streaming/),
 they did the exact same thing with [HBase](http://hbase.apache.org).
-[Concord](concord.io) in it's currrent implementation does something different,
+[Concord](http://concord.io) in it's currrent implementation does something different,
 but we found that in practice this is a good system. It make's people feel good
 if you use/connect to a 'known' datastore that users know how to operate.
 
@@ -182,7 +182,7 @@ abstractly about what you are doing, datastores often act as 2 separate systems.
 
 They act as your queueing system as well as your key-value system.
 
-An example is when I was working with early versions of [Storm](storm.apache.org)
+An example is when I was working with early versions of [Storm](http://storm.apache.org)
 I used the time qualifier/version on HBase to act as my versioning. I would then
 lower the versions of HBase to 2 and use Trident's transactional (often buggy)
 semantics to reason about money operations.
@@ -220,7 +220,7 @@ gives me a single place to reason about how hardware relates to software.
 Say that you wanted to colocate your ad servers with your redis instances.
 Boom! you can now make that an invariant on your task launching DSL.
 
-Recently as part of [concord](concord.io) we are working to guarantee after
+Recently as part of [concord](http://concord.io) we are working to guarantee after
 launching tasks that the colocation of your services make sense. If you
 still have space in the machine, given some minor constraints of host
 diversification, place them in the same machine - less work for the network
@@ -233,7 +233,7 @@ This can potentially reduce the downtime of a failure as it separates execution
 your tasks fails, you can easily recover from failure with minimal downtime.
 
 
-## 5. [Kyle Kingsbury](Aphyr.com) has a cruel aparatus - Empirical failures of datastores FTW
+## 5. [Kyle Kingsbury](http://Aphyr.com) has a cruel aparatus - Empirical failures of datastores FTW
 
 Kyle at Aphyr.com has demonstrated time and time again that the implementation
 is what actually matters. Your algorithm can be sound. In fact it can be correct
@@ -342,7 +342,7 @@ any open source impl.
 I've also read [Flink's](http://arxiv.org/pdf/1506.08603.pdf) - basically Chandy
 Lamport's paper on distributed snapshots with a real implementation.
 
-This is simply a new approach. Here is the end product for [concord](concord.io)
+This is simply a new approach. Here is the end product for [concord](http://concord.io)
 that I would like to get to, where goobly is at the heart.
 
 ![Concord Intended Architecture](concordgooblyV1.png)
