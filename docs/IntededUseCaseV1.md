@@ -112,6 +112,25 @@ on event time or system time.
 <img src="http://45.media.tumblr.com/545c97a51ac779ac5607f3cd5e0a3913/tumblr_msesclKS8Z1rdutw3o1_400.gif" height="270" width="480">
 </code>
 
+## 1. Global availability of a datastore
+## 2. Your code HAS to take advantage of the capabilities of your datastore
+## 3. Because of the interface to the world is an IP:PORT
+## 4. Mesos/YARN - Obvi, Mesos! (durability primitives)
+## 5. [Kyle Kingsbury](Aphyr.com) has a cruel aparatus - Empirical failures of datastores FTW
+## 6. Temporal nature of streams == specialized replicated state machines
+## 7. Time sucks.
+## 8. Bonus: what about other state machine algos? or even snapshotting algos?
+0. I've read a few in details (read the source code for implementations + papers)
+1. ISR(kafka)
+2. ZAB(Zookeeper)
+3. Gossip(Cassandra)
+4. Chained-RPC(HyperDex)
+5. Raft(LogCabin/Kudu)
+6. Upstream-Backup(Mention Raul's/Neha's system, oii forgot the name)
+
+I've also looked at view-stamped replication among others, but don't know of
+any open source impl
+
 ### TODO(agallego):
 1. bring all the refs to samza, apex, millwheel, flink, etc
 2. Finish the breakdown
