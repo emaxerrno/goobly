@@ -163,8 +163,76 @@ cluster *just* for storm.
 
 
 ## 2. Your code HAS to take advantage of the capabilities of your datastore
+
+If you don't you are missing out. The datastore of your choice made
+decisions for you. Replication, safety guarantees, RPC's, Serialization,
+quering interface, etc. Use them! Specially when it comes to a stremaing
+service, you will need to squish every single ounce of performance of every
+database. In fact, most will work against your use case:
+
+Temporal manipulations of data that are by definition lopsided. Either becase
+in practice one of your customers is *always* bigger than the others, usually
+by orders of magnitude. Or because you are using it to reason about timely
+operations which means that the server servicing those requests is doing all
+of the work for that time window.
+
+If you don't partition your data (user_id, site_id, etc) you risk and in every
+case/datastore I've used in productionn your crash them. If you think
+abstractly about what you are doing, datastores often act as 2 separate systems.
+
+They act as your queueing system as well as your key-value system.
+
+An example is when I was working with early versions of [Storm](storm.apache.org)
+I used the time qualifier/version on HBase to act as my versioning. I would then
+lower the versions of HBase to 2 and use Trident's transactional (often buggy)
+semantics to reason about money operations.
+
 ## 3. Because of the interface to the world is an IP:PORT
+
+Streaming engines are usually at odds with Globally visible datastores. Frist,
+well, they need to be globally visible as far as the streaming operators are
+conerned. Second, the streaming engine has absolutely zero clue wether the
+datastore is down or not.
+
+This manifests in the API of the programmer. Either the programmer has explicit
+access to tell the framework to *chill* for a second, or it throws an exception
+and the framework supervision strategies kick.
+
+It's not too hard to learn that this is a broken abstraction. It is first broken
+because an exception is not enough to know what to do. It's broken because you
+want to (as a framework author) unify the failure semantics for the programmer
+so that he can reason about them soundly. The natural thing to do in this case
+as far as a framework is concerned is to wait for a littlebit, try to re-spawn
+the task on a different machine and do this up to N times. If all else fail,
+go back and watch a movie. Come back on Monday and realize that you are missing
+50 thousand dollars from your ad spend because the region server handling the
+requests was down, so only *part* of your topology is down.
+
 ## 4. Mesos/YARN - Obvi, Mesos! (durability primitives)
+
+This is very biased opinion and hoping to get feedback here from you.
+
+Frist, I've written 5 frameworks on top of Mesos. 3 in scala/java and 2 in C++.
+I absolutely love the abstractions of an scheduler. It let's me elastically
+spawn minions to do real work and have pluggable supervision strategies. It
+gives me a single place to reason about how hardware relates to software.
+
+Say that you wanted to colocate your ad servers with your redis instances.
+Boom! you can now make that an invariant on your task launching DSL.
+
+Recently as part of [concord](concord.io) we are working to guarantee after
+launching tasks that the colocation of your services make sense. If you
+still have space in the machine, given some minor constraints of host
+diversification, place them in the same machine - less work for the network
+, etc.
+
+Now, why is mesos a good abstraction for goobly? Simple: with the 24 release,
+(i think earlier too) you now have access to durable and persistent volumes.
+This can potentially reduce the downtime of a failure as it separates execution
+(CPU & Task execution) from storage (NAS or whatever). So even if one of
+your tasks fails, you can easily recover from failure with minimal downtime.
+
+
 ## 5. [Kyle Kingsbury](Aphyr.com) has a cruel aparatus - Empirical failures of datastores FTW
 ## 6. Temporal nature of streams == specialized replicated state machines
 ## 7. Time sucks.
