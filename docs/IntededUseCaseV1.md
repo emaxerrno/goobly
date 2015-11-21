@@ -51,7 +51,7 @@ and was more confusing (#ESLStudent). Feedback is welcomed!
 
 Stateless aggregations are easy to scale. You literally just spin up
 more boxes and as long as your routing layer can handle redistribution of work
-via consistent hashing (with 256 buckets like cassandra or 3 like riak),
+via consistent hashing (e.g.: 256 vnodes like cassandra or 3 buckets like riak),
 stateless computations are the dream for framework authors.
 
 The pseudo code is relatively simple:
