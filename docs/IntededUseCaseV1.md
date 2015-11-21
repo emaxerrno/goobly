@@ -108,8 +108,9 @@ on event time or system time.
 
 
 # Let's break it down.
-![image | height=270 | width=480](giphy.com/embed/XUkWpaBl0rTKU)
-
+<code>
+<img src="http://45.media.tumblr.com/545c97a51ac779ac5607f3cd5e0a3913/tumblr_msesclKS8Z1rdutw3o1_400.gif" height="270" width="480">
+</code>
 
 ### TODO(agallego):
 1. bring all the refs to samza, apex, millwheel, flink, etc
