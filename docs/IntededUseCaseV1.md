@@ -124,14 +124,16 @@ effectively get a tailing iterator for the table(materialized view) of the
 stream at it's current offset. Any computation from that moment forward knows
 your offset into the table and will be correct and stateful per *message*.
 
-In effect this architecture did what samza did with a few brokers. Push the
+In effect this architecture did what [Samza](http://samza.apache.org/)
+did with a few [Kafka](http://kafka.apache.org) brokers. Push the
 replicated state machine complexities to other systems that are specialized and
 very good at it like Kafka/Spanner/BigTable.
 
-In fact if you look at Cask, they did the exact same thing with HBase.
+In fact if you look at [Cask](http://blog.cask.co/tag/streaming/),
+they did the exact same thing with [HBase](http://hbase.apache.org).
 [Concord](concord.io) in it's currrent implementation does something different,
 but we found that in practice this is a good system. It make's people feel good
-if you use/connect to a 'known' datastore that they know how to operate.
+if you use/connect to a 'known' datastore that users know how to operate.
 
 The obvious failure with this approach is that welp... so many. The gist of it
 all is that you end up depending on a LOT of external factors. Here is a few:
@@ -146,7 +148,7 @@ causes the region servers to get overloaded during a data center recovery)
 
 In fact, this is such a problem that for larger companies that I've consulted
 with you 'pace' (dump x recods in y time) the recovery to play nicely with
-Cassandra, HBase, etc.
+[Cassandra](http://cassandra.apache.org), HBase, etc.
 
 This is not a big deal with Google - and I am assuming - because they have
 virtually unlimited hardware. Not to mention amazing site reliability personel.
@@ -155,7 +157,8 @@ However for most businesses it is *not* practical to run a sperate HBase cluster
 per system. That is, one for the front end servers, one for your streaming
 framework, etc. Note that in large operations of
 [Apache Storm](http://storm.apache.org/) because of the hartbeat mechanism being
-stored in Zookeeper it would be the normal case to have a sperate zookeeper
+stored in Zookeeper (and their original Kafka consumer implementation)
+it would be the normal case to have a sperate zookeeper
 cluster *just* for storm.
 
 
