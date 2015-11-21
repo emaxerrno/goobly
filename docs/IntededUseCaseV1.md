@@ -113,6 +113,52 @@ on event time or system time.
 </code>
 
 ## 1. Global availability of a datastore
+
+I'm a _YUGE_ fan of [Google MillWheel](http://research.google.com/pubs/pub41378.html).
+Tyler and team inspired me to start [concord](concord.io).
+
+They key insight here is that they didn't have to worry about replicating state
+per message/tuple as they already had an internal system to handle this. When a
+downstream subscriber of a 'topic/stream' registers with the system, you
+effectively get a tailing iterator for the table(materialized view) of the
+stream at it's current offset. Any computation from that moment forward knows
+your offset into the table and will be correct and stateful per *message*.
+
+In effect this architecture did what samza did with a few brokers. Push the
+replicated state machine complexities to other systems that are specialized and
+very good at it like Kafka/Spanner/BigTable.
+
+In fact if you look at Cask, they did the exact same thing with HBase.
+[Concord](concord.io) in it's currrent implementation does something different,
+but we found that in practice this is a good system. It make's people feel good
+if you use/connect to a 'known' datastore that they know how to operate.
+
+The obvious failure with this approach is that welp... so many. The gist of it
+all is that you end up depending on a LOT of external factors. Here is a few:
+
+* Front end servers requesting data from the datastore
+* Map Reduce jobs crunching numbers
+* Data center recovery and failure bring to what equates to an operational
+outage by dumpping data faster than the datastore can handle (as is the case
+with HBase for example - if you dump data too fast, you have to manually
+partition table because the parition code gets kicked off at an interval. This
+causes the region servers to get overloaded during a data center recovery)
+
+In fact, this is such a problem that for larger companies that I've consulted
+with you 'pace' (dump x recods in y time) the recovery to play nicely with
+Cassandra, HBase, etc.
+
+This is not a big deal with Google - and I am assuming - because they have
+virtually unlimited hardware. Not to mention amazing site reliability personel.
+
+However for most businesses it is *not* practical to run a sperate HBase cluster
+per system. That is, one for the front end servers, one for your streaming
+framework, etc. Note that in large operations of
+[Apache Storm](http://storm.apache.org/) because of the hartbeat mechanism being
+stored in Zookeeper it would be the normal case to have a sperate zookeeper
+cluster *just* for storm.
+
+
 ## 2. Your code HAS to take advantage of the capabilities of your datastore
 ## 3. Because of the interface to the world is an IP:PORT
 ## 4. Mesos/YARN - Obvi, Mesos! (durability primitives)
