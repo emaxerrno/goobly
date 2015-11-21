@@ -234,7 +234,64 @@ your tasks fails, you can easily recover from failure with minimal downtime.
 
 
 ## 5. [Kyle Kingsbury](Aphyr.com) has a cruel aparatus - Empirical failures of datastores FTW
+
+Kyle at Aphyr.com has demonstrated time and time again that the implementation
+is what actually matters. Your algorithm can be sound. In fact it can be correct
+, even probably so as is the case for [Raft using coq](https://github.com/uwplse/verdi/tree/master/raft-proofs).
+
+He takes in all your favorite databases and crushes your dreams of safety. It
+leaves you wonder how anything in this world can possibly function. I, like many
+others, are a huge fan of his work. Practically every database has failed
+against his empirical tests - *ouch*.
+
+Goobly is nothing more than a replicated state machine. At it's core it
+will be a library, but I can't release a library unless I've tested a real
+system using it.
+
+The reason I mention Kyle's work is that the problem with all of these databases
+is that they hold the state for a HUGE number of things. They are often
+the store of record as well as the store of indexes and materialized views.
+They are the heart and soul of your business. The downside is that this
+centralized approach is costly during failures. It's also costly because
+as far as a stream processing is concerned it is no longer automatic. It
+usually involves a system administrator launching a new aws image, kicking
+off the rebalacing algorithm and restarting the Map Reduce jobs that depended on
+it.
+
+Goobly's scope is *MUCH* smaller. It only attempt's to replicate *ONE*
+operato's state. The streaming framework deals with a failure in a unified way.
+It knows how many instances are part of the quorum for that operator, it knows
+if a node is down and can give higher guarantees for the developer about
+what is actually happening in your system. All of this is segregated from every
+other operator. It is having a datastore *PER* networked function/computation.
+
 ## 6. Temporal nature of streams == specialized replicated state machines
+
+Streams are about processing data that has a notion of time. The popular use
+cases in the wild are abou fraud detection for ad companies, keeping indexes
+hot as is the case for google and linkedin. Materializing views as
+[Martin Kleppmann](https://martin.kleppmann.com/) has been trying to evangelize
+as of late.
+
+This is something I think kafka does really well. It tells you "Hey I'm
+going to compact your data with this parameters. Just so you know." It is a
+very good queue implementation. It performs well in practice and you expect data
+not to live there for an awful lot of time. You know you have to connect it
+to other databases for canonical store. You know you have to dequeue and use it.
+
+This simple programming model, along with the fact that it works really well,
+is why people use this abstraction as the core for all streaming today.
+Think about the fact that EVERYONE connects to kafka. Flink, Spark, Storm, Apex,
+etc, all have first class connectors to kafka. This is a good abstraction proven
+by many.
+
+This is the argument for Goobly. Goobly is a specialized replicated state
+machine. It is specialized for temporal use. It is specialized for the access
+patterns of a stremaing framework. We need a datastore, like Kafka, that just
+has a slightly higher richer interface, at the cost of a littlebit of
+performance to access records for a subset of the graph state. To be precise,
+it will be a datastore *PER* operator.
+
 ## 7. Time sucks.
 ## 8. Bonus: what about other state machine algos? or even snapshotting algos?
 0. I've read a few in details (read the source code for implementations + papers)
@@ -247,7 +304,3 @@ your tasks fails, you can easily recover from failure with minimal downtime.
 
 I've also looked at view-stamped replication among others, but don't know of
 any open source impl
-
-### TODO(agallego):
-1. bring all the refs to samza, apex, millwheel, flink, etc
-2. Finish the breakdown
