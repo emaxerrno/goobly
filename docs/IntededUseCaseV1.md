@@ -293,6 +293,40 @@ performance to access records for a subset of the graph state. To be precise,
 it will be a datastore *PER* operator.
 
 ## 7. Time sucks.
+
+
+Please see Tyler [Akidau's presentation on dataflow](https://docs.google.com/presentation/d/11YqFU760Gk1qcKr3K3rCG4dXHP5X2zmTS45vQY2lDN4/present?)
+for details about why time is hard on unbounded collections.
+
+Here is an example of the various 'kinds' of times that you can have.
+
+```java
+PCollection<KV<String, Long>> sums = Pipeline
+  .begin()
+  .read(“userRequests”)
+  .apply(Window.into(new Sessions(1, MINUTE))
+               .trigger(new SequenceOf(
+                  new RepeatUntil(
+                    new AtPeriod(1, MINUTE),
+                    new AtWatermark()),
+                  new AtWatermark(),
+                  new RepeatUntil(
+                    new AfterCount(1),
+                    new AfterDelay(
+                      14, DAYS, TimeDomain.EVENT_TIME))));
+  .apply(new Sum());
+
+```
+
+1. Event time
+2. System time
+3. Session time
+4. Sliding window times
+5. Time to give up! - for real - you need to know when data is no longer useful.
+
+Not sure yet how goobly will expose these at the datastore layer, but I assume
+it will expire entries after some configureable ammount of time.
+
 ## 8. Bonus: what about other state machine algos? or even snapshotting algos?
 0. I've read a few in details (read the source code for implementations + papers)
 1. ISR(kafka)
@@ -303,4 +337,12 @@ it will be a datastore *PER* operator.
 6. Upstream-Backup(Mention Raul's/Neha's system, oii forgot the name)
 
 I've also looked at view-stamped replication among others, but don't know of
-any open source impl
+any open source impl.
+
+I've also read [Flink's](http://arxiv.org/pdf/1506.08603.pdf) - basically Chandy
+Lamport's paper on distributed snapshots with a real implementation.
+
+This is simply a new approach. Here is the end product for [concord](concord.io)
+that I would like to get to, where goobly is at the heart.
+
+![Concord Intended Architecture](concordgooblyV1.png)
