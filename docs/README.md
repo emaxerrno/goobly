@@ -1,4 +1,31 @@
 # Goobly:
+
+# Executive Summary:
+
+*Proposal*
+
+Goobly is a replicated rocksdb - using raft. It's intended use is to deploy many
+smaller clusters that only handle a 'table'. In the case of stream processing,
+it handle's one operator's sate.
+
+*cons*
+
+No one has done this as far as I know. Most people delegate the replication
+of state to a specialized system like Kafka, BigTable, etc.
+
+*Pros*
+
+This is long winded, but the gist is that it offers faster recovery time.
+It is deeply linked to the application. That is, this is meant to run in the
+same box as the application. See The long answer for details.
+
+*Reviewers*
+
+Anyone that reads this file and has constructive feedback! I would
+love your feedback.
+
+
+# Long Explanation:
 ## Experimental approach to stream processing.
 
 Let's start with an example from spark.
