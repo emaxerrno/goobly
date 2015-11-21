@@ -83,7 +83,7 @@ Goobly is the component that would make checkpointing state trivial.
 
 Here is what it would look like in practice:
 
-![Intended Architecture](gooblyV1.svg)
+![Intended Architecture](gooblyV1.png)
 
 # BUT WHYYYYYY, for the love of god!
 ### How do I love 'state', Let me count the ways:
