@@ -1,5 +1,8 @@
 # goobly
-goobly - project to port over a  raft impl w/ gRPC in modern C++ - Still work in progress.
+
+goobly ~= rocksdb + raft.
+
+see the 'docs' folder for a more detailed design
 
 # how to contribute?
 * use clang-format on all your cpp code. This is what I use in emacs:
@@ -27,4 +30,5 @@ $ cd meta && source source_ansible_bash && ansible-playbook -K playbook/dev_all.
 $ mkdir build && cd build && cmake .. && make && ctest -V
 ```
 
-/cc [@gallegoxx](https://twitter.com/gallegoxx)
+Yours truly,
+[@gallegoxx](https://twitter.com/gallegoxx)
