@@ -5,31 +5,34 @@ option optimize_for = SPEED;
 option cc_enable_arenas = true;
 package goobly;
 
-import "common.proto"
-
-
+import "common.proto";
 
 message ScanReply {
   // scans | gets
-  repeated common.Entry entries = 3;
+  repeated Entry entries = 1;
 }
+
 message ScanRequest {
   message Range {
     // a get is where the end key is not set or the same
     bytes key_start = 1;
-    optional bytes key_end = 2;
+    bytes key_end = 2;
     // if set. then start at key_start and up to this limit
-    optional uint32 limit = 3;
+    uint32 limit = 3;
   }
   repeated Range scan = 1;
 }
 
 message PutRequest {
-  repeated common.Entry entry = 1;
+  repeated Entry entry = 1;
 }
 
 message DeleteRequest {
   repeated bytes keys = 1;
+}
+
+message StateError {
+  bool wut = 1; // here until i can figure out how to have void rpc
 }
 
 // Because GRPC uses 'HTTP2' status code with
@@ -38,6 +41,6 @@ message DeleteRequest {
 //
 service State {
   rpc scan(ScanRequest) returns (ScanReply);
-  rpc put(PutRequest);
-  rpc delete(DeleteRequest);
+  rpc put(PutRequest) returns (StateError);
+  rpc delete(DeleteRequest) returns (StateError);
 }

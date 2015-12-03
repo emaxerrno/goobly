@@ -31,13 +31,13 @@ endfunction ()
 
 set (TEST_ROOT ${PROJECT_SOURCE_DIR}/test)
 
-register_test (simple_rpc_test
-  ${TEST_ROOT}/simple_rpc_test
-  main.cc)
+# register_test (simple_rpc_test
+#   ${TEST_ROOT}/simple_rpc_test
+#   main.cc)
 
-register_test (async_rpc_test
-  ${TEST_ROOT}/async_rpc_test
-  main.cc)
+# register_test (async_rpc_test
+#   ${TEST_ROOT}/async_rpc_test
+#   main.cc)
 
 add_custom_target (check
   COMMAND ctest --output-on-failure -j5

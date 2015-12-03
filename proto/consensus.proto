@@ -7,7 +7,7 @@ option cc_enable_arenas = true;
 package goobly.consensus;
 
 
-import "common.proto"
+import "common.proto";
 
 // Raft
 // kudu: https://github.com/cloudera/kudu/blob/6e6be4af952fcfb75269ad362eba317965e90455/src/kudu/consensus/consensus.proto
@@ -43,7 +43,7 @@ message AppendEntriesArgs {
   uint64 prev_log_index_id = 3;
   uint64 prev_log_term = 4;
   uint64 leader_commit_id = 5;
-  repeated common.Entry entries = 6;
+  repeated Entry entries = 6;
 }
 message AppendEntriesReply {
   uint64 term = 1;

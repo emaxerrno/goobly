@@ -25,21 +25,28 @@ include_directories (
   ${PROJECT_SOURCE_DIR}/proto
   )
 
-
-# set (CPP_CLIENT_HEADERS
-#   include/goobly/h1.hpp
-#   )
-
 set (PROTO_SOURCES
+  ${PROJECT_SOURCE_DIR}/proto/common.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/common.pb.h
+  ${PROJECT_SOURCE_DIR}/proto/common.proto
+  ${PROJECT_SOURCE_DIR}/proto/consensus.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/consensus.pb.h
+  ${PROJECT_SOURCE_DIR}/proto/consensus.proto
+  ${PROJECT_SOURCE_DIR}/proto/goobly.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/goobly.pb.h
   ${PROJECT_SOURCE_DIR}/proto/goobly.pb.cc
   )
+
 set (PROTO_GRPC_SOURCES
+  ${PROJECT_SOURCE_DIR}/proto/common.grpc.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/common.grpc.pb.h
+  ${PROJECT_SOURCE_DIR}/proto/consensus.grpc.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/consensus.grpc.pb.h
   ${PROJECT_SOURCE_DIR}/proto/goobly.grpc.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/goobly.grpc.pb.h
   )
 
 set (LIB_GOOBLY_SOURCES
-  ${PROTO_SOURCES}
-  ${PROTO_GRPC_SOURCES}
   )
 
 function (join VALUES SEP OUTPUT)
@@ -77,6 +84,11 @@ set (CXX_FLAG_LIST
   "-Wreorder"
   )
 
+# set(GCC_COVERAGE_COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
+# set(GCC_COVERAGE_LINK_FLAGS    "-lgcov")
+# set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -v" )
+
 join ("${CXX_FLAG_LIST}" " " CMAKE_CXX_FLAGS)
 join ("${BASE_FLAGS}" " " CMAKE_C_FLAGS)
 set (CMAKE_CXX_COMPILER clang++-3.6)
@@ -85,16 +97,22 @@ set (PROTOC ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/bins/opt/protobuf/protoc)
 set (PROTOC_GRPC_PLUGINS_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/bins/opt)
 
 add_custom_command (
-  OUTPUT ${PROTO_SOURCES}
-  DEPENDS ${PROJECT_SOURCE_DIR}/proto/goobly.proto
+  OUTPUT ${PROTO_SOURCES} ${PROTO_GRPC_SOURCES}
+  DEPENDS
+  ${PROJECT_SOURCE_DIR}/proto/goobly.proto
+  ${PROJECT_SOURCE_DIR}/proto/common.proto
+  ${PROJECT_SOURCE_DIR}/proto/consensus.proto
+
+  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --cpp_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/common.proto
+  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --plugin=protoc-gen-grpc=${PROTOC_GRPC_PLUGINS_PATH}/grpc_cpp_plugin --grpc_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/common.proto
+
   COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --cpp_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/goobly.proto
+  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --plugin=protoc-gen-grpc=${PROTOC_GRPC_PLUGINS_PATH}/grpc_cpp_plugin --grpc_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/goobly.proto
+
+  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --cpp_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/consensus.proto
+  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --plugin=protoc-gen-grpc=${PROTOC_GRPC_PLUGINS_PATH}/grpc_cpp_plugin --grpc_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/consensus.proto
   )
 
-add_custom_command (
-  OUTPUT ${PROTO_GRPC_SOURCES}
-  DEPENDS ${PROJECT_SOURCE_DIR}/proto/goobly.proto
-  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --plugin=protoc-gen-grpc=${PROTOC_GRPC_PLUGINS_PATH}/grpc_cpp_plugin --grpc_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/goobly.proto
-  )
 
 
 set (GOOBLY_STATIC_LIB_DEPS
@@ -114,6 +132,7 @@ set (GOOBLY_DYN_LIBS_DEPS
   rt
   dl
   )
+
 set (GOOBLY_LIBRARIES
   ${GOOBLY_DYN_LIBS_DEPS}
   )
