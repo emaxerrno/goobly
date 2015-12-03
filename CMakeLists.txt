@@ -114,37 +114,52 @@ add_custom_command (
   )
 
 
+set (LIBFOLLY
+  :libboost_filesystem.so.1.55.0
+  :libboost_system.so.1.55.0
+  :libboost_regex.so.1.55.0
+  :libpthread.so.0
+  :liblzma.so.5
+  :libz.so.1
+  :libsnappy.so.1
+  :liblz4.so.1
+  :libjemalloc.so.1
+  :libevent-2.0.so.5
+  :libdouble-conversion.so.1
+  :libssl.so.1.0.0
+  :libgflags.so.2
+  :libglog.so.0
+  :libstdc++.so.6   #g++'s runtime
+  :libm.so.6        #math for libc
+  :libc.so.6        #c lib
+  :libgcc_s.so.1    #gcc's runtime
+  :libicuuc.so.52   #unicode
+  :libicui18n.so.52 #int'lization
+  :libdl.so.2       #dyn loading
+  :libcrypto.so.1.0.0
+  :libunwind.so.8   #stack unwind
+  :libicudata.so.52 #not sure
+  )
 
-set (GOOBLY_STATIC_LIB_DEPS
-  :libgrpc++_unsecure.a
-  :libgrpc.a
-  :libgpr.a
+set (LIBGRPC
+  :libgrpc++.so.0.12.0.0
+  :libgrpc.so.0.12.0.0
+  :libgpr.so.0.12.0.0
   :libprotobuf.a
-  :libssl.a
-  :libcrypto.a
+  :libssl.so.1.0.0
   )
 
-set (GOOBLY_DYN_LIBS_DEPS
-  :libjemalloc.so.1 # TODO(agallego) - add it to the apt.yml repo
-  :libglog.so.0.0.0
-  z
-  pthread
-  rt
-  dl
-  )
-
-set (GOOBLY_LIBRARIES
-  ${GOOBLY_DYN_LIBS_DEPS}
-  )
-add_library (goobly SHARED
-  ${LIB_GOOBLY_SOURCES}
-  )
-target_link_libraries(goobly ${GOOBLY_STATIC_LIB_DEPS})
-
-add_executable (goobly_db
+add_executable (gbly
   ${PROJECT_SOURCE_DIR}/src/goobly_db/main.cc
+  ${PROJECT_SOURCE_DIR}/proto/common.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/consensus.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/goobly.pb.cc
+
+  ${PROJECT_SOURCE_DIR}/proto/common.grpc.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/consensus.grpc.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/goobly.grpc.pb.cc
   )
-target_link_libraries (goobly_db ${GOOBLY_DYN_LIBS_DEPS} goobly)
+target_link_libraries (gbly ${LIBFOLLY} ${LIBGRPC})
 
 
-add_subdirectory (test)
+#add_subdirectory (test)

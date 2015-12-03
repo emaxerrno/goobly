@@ -31,9 +31,14 @@ message DeleteRequest {
   repeated bytes keys = 1;
 }
 
-message StateError {
-  bool wut = 1; // here until i can figure out how to have void rpc
-}
+// GRPC: Does not support empty return, aka void
+//
+// https://groups.google.com/forum/#!topic/protobuf/4SCxInAktSc
+// The standard is to provide a 'void' type per RPC for future compat
+//
+message PutReply {}
+message DeleteReply{}
+
 
 // Because GRPC uses 'HTTP2' status code with
 // every reply, there is no need to encode
@@ -41,6 +46,6 @@ message StateError {
 //
 service State {
   rpc scan(ScanRequest) returns (ScanReply);
-  rpc put(PutRequest) returns (StateError);
-  rpc delete(DeleteRequest) returns (StateError);
+  rpc put(PutRequest) returns (PutReply);
+  rpc del(DeleteRequest) returns (DeleteReply);
 }
