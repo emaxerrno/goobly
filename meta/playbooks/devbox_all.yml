@@ -9,3 +9,4 @@
     - compilation_tooling
     - grpc
     - google_benchmark
+    - folly

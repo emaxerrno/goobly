@@ -15,23 +15,26 @@ link_directories (
   ${PROTOBUF_LIB_PATH}
   ${PROTOBUF_LIB_PATH}/protobuf
   ${PROTOBUF_LIB_PATH}/openssl
+  ${PROJECT_SOURCE_DIR}/meta/tmp/folly/folly/.libs
   /usr/local/lib # must be last if locals aren't used
   )
 
 include_directories (
+  SYSTEM
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/include
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party/protobuf/src
-  ${PROJECT_SOURCE_DIR}/src
+  ${PROJECT_SOURCE_DIR}/meta/tmp/folly/folly
   ${PROJECT_SOURCE_DIR}/proto
+  )
+include_directories (
+  ${PROJECT_SOURCE_DIR}/src
   )
 
 set (PROTO_SOURCES
   ${PROJECT_SOURCE_DIR}/proto/common.pb.cc
   ${PROJECT_SOURCE_DIR}/proto/common.pb.h
-  ${PROJECT_SOURCE_DIR}/proto/common.proto
   ${PROJECT_SOURCE_DIR}/proto/consensus.pb.cc
   ${PROJECT_SOURCE_DIR}/proto/consensus.pb.h
-  ${PROJECT_SOURCE_DIR}/proto/consensus.proto
   ${PROJECT_SOURCE_DIR}/proto/goobly.pb.cc
   ${PROJECT_SOURCE_DIR}/proto/goobly.pb.h
   ${PROJECT_SOURCE_DIR}/proto/goobly.pb.cc
@@ -115,6 +118,7 @@ add_custom_command (
 
 
 set (LIBFOLLY
+  :libfolly.so.57.0.0
   :libboost_filesystem.so.1.55.0
   :libboost_system.so.1.55.0
   :libboost_regex.so.1.55.0

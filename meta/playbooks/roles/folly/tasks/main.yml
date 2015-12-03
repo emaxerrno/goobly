@@ -13,16 +13,16 @@
 
 - command: autoreconf -ivf
   args:
-    chdir: '{{goobly_cache_dir}}/folly'
+    chdir: '{{goobly_cache_dir}}/folly/folly'
     # ignore_errors: yes
-    creates: '{{goobly_cache_dir}}/folly/configure'
+    creates: '{{goobly_cache_dir}}/folly/folly/configure'
 
 - command: ./configure
   args:
-    chdir: '{{goobly_cache_dir}}/folly'
-    creates: '{{goobly_cache_dir}}/folly/Makefile'
+    chdir: '{{goobly_cache_dir}}/folly/folly'
+    creates: '{{goobly_cache_dir}}/folly/folly/Makefile'
 
 - command: make -j{{ansible_processor_vcpus}}
   args:
-    chdir: '{{goobly_cache_dir}}/folly'
-    creates: '{{goobly_cache_dir}}/folly/libs/libfolly.so.0.57.0'
+    chdir: '{{goobly_cache_dir}}/folly/folly'
+    creates: '{{goobly_cache_dir}}/folly/folly/.libs/libfolly.so.57.0.0'
