@@ -3,28 +3,49 @@ option java_package = "goobly.grpc";
 option objc_class_prefix = "GBLY";
 option optimize_for = SPEED;
 option cc_enable_arenas = true;
-
 package goobly;
 
+import "common.proto";
 
-// The greeting service definition.
-service MultiGreeter {
-  // Sends multiple greetings
-  rpc sayHello (HelloRequest) returns (stream HelloReply) {}
+message ScanReply {
+  // scans | gets
+  repeated Entry entries = 1;
 }
 
-// The greeting service definition.
-service Greeter {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
+message ScanRequest {
+  message Range {
+    // a get is where the end key is not set or the same
+    bytes key_start = 1;
+    bytes key_end = 2;
+    // if set. then start at key_start and up to this limit
+    uint32 limit = 3;
+  }
+  repeated Range scan = 1;
 }
 
-// The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
+message PutRequest {
+  repeated Entry entry = 1;
 }
 
-// The response message containing the greetings
-message HelloReply {
-  string message = 1;
+message DeleteRequest {
+  repeated bytes keys = 1;
+}
+
+// GRPC: Does not support empty return, aka void
+//
+// https://groups.google.com/forum/#!topic/protobuf/4SCxInAktSc
+// The standard is to provide a 'void' type per RPC for future compat
+//
+message PutReply {}
+message DeleteReply{}
+
+
+// Because GRPC uses 'HTTP2' status code with
+// every reply, there is no need to encode
+// a 'message Status' in every reply. This is implicit and convenient
+//
+service State {
+  rpc scan(ScanRequest) returns (ScanReply);
+  rpc put(PutRequest) returns (PutReply);
+  rpc del(DeleteRequest) returns (DeleteReply);
 }

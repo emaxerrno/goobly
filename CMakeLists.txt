@@ -21,25 +21,32 @@ link_directories (
 include_directories (
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/include
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party/protobuf/src
-  ${PROJECT_SOURCE_DIR}/meta/tmp/google_benchmark/include
-  ${PROJECT_SOURCE_DIR}/lib
+  ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_SOURCE_DIR}/proto
   )
 
-
-# set (CPP_CLIENT_HEADERS
-#   include/goobly/h1.hpp
-#   )
-
 set (PROTO_SOURCES
+  ${PROJECT_SOURCE_DIR}/proto/common.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/common.pb.h
+  ${PROJECT_SOURCE_DIR}/proto/common.proto
+  ${PROJECT_SOURCE_DIR}/proto/consensus.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/consensus.pb.h
+  ${PROJECT_SOURCE_DIR}/proto/consensus.proto
+  ${PROJECT_SOURCE_DIR}/proto/goobly.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/goobly.pb.h
   ${PROJECT_SOURCE_DIR}/proto/goobly.pb.cc
   )
+
 set (PROTO_GRPC_SOURCES
+  ${PROJECT_SOURCE_DIR}/proto/common.grpc.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/common.grpc.pb.h
+  ${PROJECT_SOURCE_DIR}/proto/consensus.grpc.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/consensus.grpc.pb.h
   ${PROJECT_SOURCE_DIR}/proto/goobly.grpc.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/goobly.grpc.pb.h
   )
+
 set (LIB_GOOBLY_SOURCES
-  ${PROTO_SOURCES}
-  ${PROTO_GRPC_SOURCES}
   )
 
 function (join VALUES SEP OUTPUT)
@@ -60,12 +67,12 @@ set(BASE_FLAGS
   "-Wparentheses"
   "-Wpointer-arith"
   "-Wformat-security"
-  # "-Wnon-virtual-dtor"
   "-Wunused"
   "-Wno-unused-parameter"
   "-Wcast-align"
   "-Wmissing-field-initializers"
   "-o2"
+  "-ggdb"
   )
 
 set (CXX_FLAG_LIST
@@ -77,6 +84,11 @@ set (CXX_FLAG_LIST
   "-Wreorder"
   )
 
+# set(GCC_COVERAGE_COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
+# set(GCC_COVERAGE_LINK_FLAGS    "-lgcov")
+# set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -v" )
+
 join ("${CXX_FLAG_LIST}" " " CMAKE_CXX_FLAGS)
 join ("${BASE_FLAGS}" " " CMAKE_C_FLAGS)
 set (CMAKE_CXX_COMPILER clang++-3.6)
@@ -85,41 +97,69 @@ set (PROTOC ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/bins/opt/protobuf/protoc)
 set (PROTOC_GRPC_PLUGINS_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/bins/opt)
 
 add_custom_command (
-  OUTPUT ${PROTO_SOURCES}
-  DEPENDS ${PROJECT_SOURCE_DIR}/proto/goobly.proto
+  OUTPUT ${PROTO_SOURCES} ${PROTO_GRPC_SOURCES}
+  DEPENDS
+  ${PROJECT_SOURCE_DIR}/proto/goobly.proto
+  ${PROJECT_SOURCE_DIR}/proto/common.proto
+  ${PROJECT_SOURCE_DIR}/proto/consensus.proto
+
+  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --cpp_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/common.proto
+  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --plugin=protoc-gen-grpc=${PROTOC_GRPC_PLUGINS_PATH}/grpc_cpp_plugin --grpc_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/common.proto
+
   COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --cpp_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/goobly.proto
-  )
-
-add_custom_command (
-  OUTPUT ${PROTO_GRPC_SOURCES}
-  DEPENDS ${PROJECT_SOURCE_DIR}/proto/goobly.proto
   COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --plugin=protoc-gen-grpc=${PROTOC_GRPC_PLUGINS_PATH}/grpc_cpp_plugin --grpc_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/goobly.proto
+
+  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --cpp_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/consensus.proto
+  COMMAND ${PROTOC} -I${PROJECT_SOURCE_DIR}/proto --plugin=protoc-gen-grpc=${PROTOC_GRPC_PLUGINS_PATH}/grpc_cpp_plugin --grpc_out=${PROJECT_SOURCE_DIR}/proto ${PROJECT_SOURCE_DIR}/proto/consensus.proto
   )
 
 
-set (GOOBLY_STATIC_LIB_DEPS
-  :libgrpc++_unsecure.a
-  :libgrpc.a
-  :libgpr.a
+set (LIBFOLLY
+  :libboost_filesystem.so.1.55.0
+  :libboost_system.so.1.55.0
+  :libboost_regex.so.1.55.0
+  :libpthread.so.0
+  :liblzma.so.5
+  :libz.so.1
+  :libsnappy.so.1
+  :liblz4.so.1
+  :libjemalloc.so.1
+  :libevent-2.0.so.5
+  :libdouble-conversion.so.1
+  :libssl.so.1.0.0
+  :libgflags.so.2
+  :libglog.so.0
+  :libstdc++.so.6   #g++'s runtime
+  :libm.so.6        #math for libc
+  :libc.so.6        #c lib
+  :libgcc_s.so.1    #gcc's runtime
+  :libicuuc.so.52   #unicode
+  :libicui18n.so.52 #int'lization
+  :libdl.so.2       #dyn loading
+  :libcrypto.so.1.0.0
+  :libunwind.so.8   #stack unwind
+  :libicudata.so.52 #not sure
+  )
+
+set (LIBGRPC
+  :libgrpc++.so.0.12.0.0
+  :libgrpc.so.0.12.0.0
+  :libgpr.so.0.12.0.0
   :libprotobuf.a
-  :libssl.a
-  :libcrypto.a
+  :libssl.so.1.0.0
   )
 
-set (GOOBLY_DYN_LIBS_DEPS
-  :libjemalloc.so.1 # TODO(agallego) - add it to the apt.yml repo
-  :libglog.so.0.0.0
-  z
-  pthread
-  rt
-  dl
-  )
-set (GOOBLY_LIBRARIES
-  ${GOOBLY_DYN_LIBS_DEPS}
-  )
-add_library (goobly SHARED
-  ${LIB_GOOBLY_SOURCES}
-  )
-target_link_libraries(goobly ${GOOBLY_STATIC_LIB_DEPS})
+add_executable (gbly
+  ${PROJECT_SOURCE_DIR}/src/goobly_db/main.cc
+  ${PROJECT_SOURCE_DIR}/proto/common.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/consensus.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/goobly.pb.cc
 
-add_subdirectory (test)
+  ${PROJECT_SOURCE_DIR}/proto/common.grpc.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/consensus.grpc.pb.cc
+  ${PROJECT_SOURCE_DIR}/proto/goobly.grpc.pb.cc
+  )
+target_link_libraries (gbly ${LIBFOLLY} ${LIBGRPC})
+
+
+#add_subdirectory (test)
