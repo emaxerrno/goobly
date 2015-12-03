@@ -30,10 +30,9 @@
     - 'ccache'
     - 'emacs24-nox'
     - 'libunwind8-dev'
-    - 'clang-3.8'
-    - 'clang-format-3.8' # compiler needed
-    - 'clang-modernize-3.8' # compiler formatter
-    - 'libclang-3.8-dev' # needs for irony server
+    - 'clang-3.6'
+    - 'clang-format-3.6' # compiler needed
+    - 'clang-modernize-3.6' # compiler formatter
     - 'libgoogle-perftools-dev' # profiling tools
     - 'doxygen' # needed for docs
     - 'libgtest-dev' #grpc & folly

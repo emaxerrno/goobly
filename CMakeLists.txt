@@ -91,8 +91,8 @@ set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -v" )
 
 join ("${CXX_FLAG_LIST}" " " CMAKE_CXX_FLAGS)
 join ("${BASE_FLAGS}" " " CMAKE_C_FLAGS)
-set (CMAKE_CXX_COMPILER clang++-3.6)
-set (CMAKE_C_COMPILER clang-3.6)
+set (CMAKE_CXX_COMPILER g++-5)
+set (CMAKE_C_COMPILER gcc-5)
 set (PROTOC ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/bins/opt/protobuf/protoc)
 set (PROTOC_GRPC_PLUGINS_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/bins/opt)
 
