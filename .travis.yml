@@ -1,0 +1,12 @@
+language: cpp
+
+compiler:
+  - gcc
+
+before_script:
+  - pushd meta && source source_ansible_bash && ansible-playbook -K playbooks/devall.yml && popd
+  - mkdir build
+  - cd build
+  - cmake ..
+
+script: make
