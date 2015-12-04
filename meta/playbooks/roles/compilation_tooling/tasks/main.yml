@@ -43,5 +43,5 @@
     - 'liblz4-dev'
     - 'libevent-dev'
     - 'libdouble-conversion-dev'
-    - 'libunwind8-dev' #folly & glog stack unwindiwng
+    - 'libunwind-dev' #folly & glog stack unwindiwng
     - 'libssl-dev' # END folly lib deps
