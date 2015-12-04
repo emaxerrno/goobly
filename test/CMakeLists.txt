@@ -2,15 +2,21 @@ set (GBENCH_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/google_benchmark)
 
 link_directories (
   ${GBENCH_LIB_PATH}/src
+  ${PROJECT_SOURCE_DIR}/meta/tmp/googletest/build/googlemock
+  ${PROJECT_SOURCE_DIR}/meta/tmp/googletest/build/googlemock/gtest
   )
+
 include_directories (
-  ${GBENCH_LIB_PATH/include}
+  SYSTEM
+  ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/include
+  ${PROJECT_SOURCE_DIR}/meta/tmp/googletest/googletest/include
+  ${PROJECT_SOURCE_DIR}/meta/tmp/googletest/googlemock/include
+  ${GBENCH_LIB_PATH}/include
   )
 
 set (GOOBLY_TEST_LIBRARIES
-  ${GTEST_BOTH_LIBRARIES}
-  goobly
-  ${GOOBLY_LIBRARIES}
+  :libgtest.a
+  :libgmock.a
   :libbenchmark.a
   )
 

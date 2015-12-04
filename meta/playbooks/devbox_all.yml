@@ -10,3 +10,4 @@
     - grpc
     - google_benchmark
     - folly
+    - gtest
