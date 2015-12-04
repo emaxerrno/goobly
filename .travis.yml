@@ -4,7 +4,7 @@ compiler:
   - gcc
 
 before_script:
-  - ./travis_depsh
+  - ./travis_deps.sh
 
 
 script: make
