@@ -4,7 +4,7 @@ git_root=$(git rev-parse --show-toplevel)
 
 cd $git_root/meta
 source source_ansible_bash
-ansible-playbook playbooks/devall.yml
+ansible-playbook playbooks/devbox_all.yml
 
 
 mkdir -p $git_root/build
