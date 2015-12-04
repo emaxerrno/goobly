@@ -4,10 +4,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 enable_testing ()
 
-
-# libgflags-dev libgtest-dev
-find_package (GTest REQUIRED)
-
 set (PROTOBUF_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/libs/opt)
 set (PROTOBUF_3RD_PARTY_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party)
 
