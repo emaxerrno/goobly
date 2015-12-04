@@ -8,4 +8,4 @@ before_script:
   - ./travis_deps.sh
 
 
-script: make
+script: ./travis_build.sh
