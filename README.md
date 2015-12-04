@@ -1,11 +1,8 @@
-# goobly
+# goobly ![Build Status](https://travis-ci.org/senior7515/goobly.svg?branch=master)
 
 goobly ~= rocksdb + raft.
 
 see the 'docs' folder for a more detailed design
-
-Build status ![Build Status](https://travis-ci.org/senior7515/goobly.svg?branch=master)
-
 
 
 # how to contribute?
