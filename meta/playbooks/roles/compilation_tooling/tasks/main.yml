@@ -25,7 +25,6 @@
     - 'ccache'
     - 'cmake'
     - 'git'
-    - 'git-extras'
     - 'binutils-gold'
     - 'ccache'
     - 'emacs24-nox'
