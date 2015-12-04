@@ -27,7 +27,6 @@
     - 'git'
     - 'binutils-gold'
     - 'ccache'
-    - 'emacs24-nox'
     - 'libunwind8-dev'
     - 'clang-3.6'
     - 'clang-format-3.6' # compiler needed
