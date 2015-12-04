@@ -4,9 +4,7 @@ compiler:
   - gcc
 
 before_script:
-  - pushd meta && source source_ansible_bash && ansible-playbook -K playbooks/devall.yml && popd
-  - mkdir build
-  - cd build
-  - cmake ..
+  - ./travis_depsh
+
 
 script: make
