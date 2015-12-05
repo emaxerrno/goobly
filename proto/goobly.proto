@@ -9,18 +9,19 @@ import "common.proto";
 
 message ScanReply {
   // scans | gets
-  repeated Entry entries = 1;
+  repeated Entry entries = 2;
 }
 
 message ScanRequest {
   message Range {
+    string table = 1;
     // a get is where the end key is not set or the same
-    bytes key_start = 1;
-    bytes key_end = 2;
+    bytes key_start = 2;
+    bytes key_end = 3;
     // if set. then start at key_start and up to this limit
-    uint32 limit = 3;
+    uint32 limit = 4;
   }
-  repeated Range scan = 1;
+  repeated Range scan = 2;
 }
 
 message PutRequest {
