@@ -25,11 +25,13 @@ message ScanRequest {
 }
 
 message PutRequest {
-  repeated Entry entry = 1;
+  string table = 1;
+  repeated Entry entry = 2;
 }
 
 message DeleteRequest {
-  repeated bytes keys = 1;
+  string table = 1;
+  repeated bytes keys = 2;
 }
 
 // GRPC: Does not support empty return, aka void
