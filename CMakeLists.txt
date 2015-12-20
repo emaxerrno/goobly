@@ -162,4 +162,4 @@ add_executable (gbly
 target_link_libraries (gbly ${LIBFOLLY} ${LIBGRPC})
 
 
-#add_subdirectory (test)
+add_subdirectory (test)

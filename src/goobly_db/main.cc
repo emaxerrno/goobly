@@ -6,4 +6,5 @@ int main(int args, char *argv[], char *env[]) {
   // compatible with the version of the headers we compiled against.
   GOOGLE_PROTOBUF_VERIFY_VERSION;
   std::cout << "Hello world" << std::endl;
+
 }
