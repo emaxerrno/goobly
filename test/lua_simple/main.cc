@@ -26,5 +26,4 @@ int main(int argc, char *argv[], char* env[]) {
   auto xlua = lua_tonumber(state, -1);
   LOG(INFO) << "Got number from lua: " << xlua;
   lua_close(state);
-
 }
