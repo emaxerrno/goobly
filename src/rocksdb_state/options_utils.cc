@@ -1,4 +1,7 @@
 #include "rocksdb_state/options_utils.hpp"
+#include <rocksdb/rate_limiter.h>
+#include <rocksdb/table.h>
+
 
 namespace goobly {
 
@@ -6,6 +9,7 @@ namespace goobly {
 // These options were mostly taken from the rocks_engine.cpp from the mongodb
 // backing store by facebook
 ::rocksdb::Options dboptsFactory() {
+  auto const kCacheSizeGB = 3;
   rocksdb::Options options;
   // Optimize RocksDB. This is the easiest way to get RocksDB to perform well
   // does starts a thread per core
@@ -14,7 +18,7 @@ namespace goobly {
     static_cast<int64_t>(_maxWriteMBPerSec) * 1024 * 1024);
   rocksdb::BlockBasedTableOptions table_options;
   table_options.block_cache =
-    rocksdb::NewLRUCache(cacheSizeGB * 1024 * 1024 * 1024LL, 6);
+    rocksdb::NewLRUCache(kCacheSizeGB * 1024 * 1024 * 1024LL, 6);
   table_options.filter_policy.reset(rocksdb::NewBloomFilterPolicy(10, false));
   table_options.block_size = 16 * 1024; // 16KB
   table_options.format_version = 2;
