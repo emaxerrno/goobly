@@ -27,8 +27,8 @@ add_executable (lua_simple
   ${PROJECT_SOURCE_DIR}/test/lua_simple/main.cc
   )
 target_link_libraries (lua_simple
+  :${PROJECT_SOURCE_DIR}/meta/tmp/googletest/build/googlemock/gtest/libgtest.a
   :liblua5.2.so.0.0.0
-  :libgtest.a
   :libglog.so.0
   :libdl.so.2       #dyn loading
   :libpthread.so.0
