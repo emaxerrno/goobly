@@ -8,4 +8,4 @@ mkdir -p $git_root/build
 cd $git_root/build
 cmake $git_root
 make -j$nprocs
-ctest -j$nprocs
+ctest -j$nprocs -V
