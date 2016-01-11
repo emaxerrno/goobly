@@ -11,3 +11,4 @@
     - google_benchmark
     - folly
     - gtest
+    - nvml

@@ -45,4 +45,3 @@
     - 'libdouble-conversion-dev'
     - 'libunwind8-dev' #folly & glog stack unwindiwng
     - 'libssl-dev' # END folly lib deps
-    - 'liblua5.2-dev' # Embedding lua into the server for scripting

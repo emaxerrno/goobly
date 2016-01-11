@@ -7,11 +7,14 @@ enable_testing ()
 set (PROTOBUF_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/libs/opt)
 set (PROTOBUF_3RD_PARTY_LIB_PATH ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party)
 
+
+# Don't forget to add them to the run_test.sh
 link_directories (
   ${PROTOBUF_LIB_PATH}
   ${PROTOBUF_LIB_PATH}/protobuf
   ${PROTOBUF_LIB_PATH}/openssl
   ${PROJECT_SOURCE_DIR}/meta/tmp/folly/folly/.libs
+  ${PROJECT_SOURCE_DIR}/meta/tmp/nvml/src/nondebug
   /usr/local/lib # must be last if locals aren't used
   )
 
@@ -20,6 +23,7 @@ include_directories (
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/include
   ${PROJECT_SOURCE_DIR}/meta/tmp/grpc/third_party/protobuf/src
   ${PROJECT_SOURCE_DIR}/meta/tmp/folly/folly
+  ${PROJECT_SOURCE_DIR}/meta/tmp/nvml/src/include
   ${PROJECT_SOURCE_DIR}/proto
   )
 include_directories (

@@ -9,6 +9,7 @@ function (register_test NAME DIR)
     )
 endfunction (register_test)
 
+# Don't forget to add them to the run_test.sh
 link_directories (
   ${GBENCH_LIB_PATH}/src
   ${PROJECT_SOURCE_DIR}/meta/tmp/googletest/build/googlemock
@@ -23,15 +24,15 @@ include_directories (
   ${GBENCH_LIB_PATH}/include
   )
 
-add_executable (lua_simple
-  ${PROJECT_SOURCE_DIR}/test/lua_simple/main.cc
+add_executable (libmemlog_simple
+  ${PROJECT_SOURCE_DIR}/test/libmemlog_simple/main.cc
   )
-target_link_libraries (lua_simple
-  :${PROJECT_SOURCE_DIR}/meta/tmp/googletest/build/googlemock/gtest/libgtest.a
-  :liblua5.2.so.0.0.0
+target_link_libraries (libmemlog_simple
+  :libgtest.a
+  :libpmem.so.1.0.0
+  :libpmemlog.so.1.0.0
   :libglog.so.0
   :libdl.so.2       #dyn loading
   :libpthread.so.0
   )
-
-register_test(lua_simple ${TEST_ROOT}/lua_simple)
+register_test(libmemlog_simple ${TEST_ROOT}/libmemlog_simple)

@@ -1,9 +1,12 @@
 #!/bin/bash --login
-# set -ex
+set -ex
 git_root=$(git rev-parse --show-toplevel)
-grpc_libs_path=$git_root/meta/tmp/grpc/libs/opt
-protobuf_libs_path=/meta/tmp/grpc/third_party/protobuf/src/.libs
-export LD_LIBRARY_PATH=$grpc_libs_path:$protobuf_libs_path:$LD_LIBRARY_PATH
+grpc_libs_path="$git_root/meta/tmp/grpc/libs/opt"
+protobuf_libs_path="$git_root/meta/tmp/grpc/third_party/protobuf/src/.libs"
+nvml_libs="$git_root/meta/tmp/nvml/src/nondebug"
+gtest_libs="$git_root/meta/tmp/googletest/build/googlemock/gtest:$git_root/meta/tmp/googletest/build/googlemock:$git_root/meta/tmp/google_benchmark"
+
+export LD_LIBRARY_PATH=$grpc_libs_path:$protobuf_libs_path:$gtest_libs:$nvml_libs:$LD_LIBRARY_PATH
 export GLOG_logtostderr=${GLOG_logtostderr:='1'}
 export GLOG_v=${GLOG_v:='1'}
 export GLOG_vmodule=${GLOG_vmodule,''}
