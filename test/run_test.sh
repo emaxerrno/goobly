@@ -1,5 +1,5 @@
 #!/bin/bash --login
-set -ex
+#set -ex
 git_root=$(git rev-parse --show-toplevel)
 grpc_libs_path="$git_root/meta/tmp/grpc/libs/opt"
 protobuf_libs_path="$git_root/meta/tmp/grpc/third_party/protobuf/src/.libs"
