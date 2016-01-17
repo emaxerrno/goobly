@@ -74,7 +74,7 @@ set(BASE_FLAGS
   "-Wno-unused-parameter"
   "-Wcast-align"
   "-Wmissing-field-initializers"
-  "-o2"
+  "-O2"
   "-ggdb"
   )
 
