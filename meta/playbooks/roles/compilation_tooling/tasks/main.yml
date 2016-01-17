@@ -45,3 +45,4 @@
     - 'libdouble-conversion-dev'
     - 'libunwind8-dev' #folly & glog stack unwindiwng
     - 'libssl-dev' # END folly lib deps
+    - 'uuid-dev'
