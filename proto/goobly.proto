@@ -3,6 +3,13 @@ option java_package = "goobly.grpc";
 option objc_class_prefix = "GBLY";
 option optimize_for = SPEED;
 option cc_enable_arenas = true;
+// https://developers.google.com/protocol-buffers/docs/proto?hl=en#services
+// recommendation is to run with these as false for new projects
+option cc_generic_services = false;
+option java_generic_services = false;
+option py_generic_services = false;
+
+
 package goobly;
 
 import "common.proto";
